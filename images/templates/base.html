@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Agallery{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'css/src/output.css' %}">
+</head>
+<body class="bg-gray-100 font-sans">
+
+  <nav class="bg-white shadow mb-8">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="/" class="text-xl font-bold text-indigo-600">Agallery</a>
+      <a href="{% url 'gallery_list' %}" class="text-sm text-gray-600 hover:text-indigo-600">All Galleries</a>
+    </div>
+  </nav>
+
+  <main class="min-h-screen">
+    {% block content %}
+    {% endblock %}
+  </main>
+
+  <footer class="text-center text-gray-500 py-6 text-sm">
+    © {{ now|date:"Y" }} GallerySite — All rights reserved.
+  </footer>
+
+</body>
+</html>

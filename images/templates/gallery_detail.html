@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <div class="mb-6 text-center">
+    <h1 class="text-4xl font-bold text-indigo-800">{{ gallery.title }}</h1>
+    {% if gallery.description %}
+      <p class="text-lg text-gray-600 mt-2">{{ gallery.description }}</p>
+    {% endif %}
+  </div>
+
+  {% if media %}
+    <!-- Masonry layout for images/videos -->
+    <div class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 space-y-4">
+      {% for item in media %}
+        <div class="break-inside-avoid rounded-xl overflow-hidden shadow bg-white">
+          {% if item.is_image %}
+            <img src="{{ item.file.url }}" alt="{{ item.caption }}" class="w-full object-cover cursor-pointer hover:opacity-90 transition" onclick="openViewer('{{ item.file.url }}')">
+          {% elif item.is_video %}
+            <video controls class="w-full">
+              <source src="{{ item.file.url }}" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          {% endif %}
+          <!-- <div class="p-3 flex justify-between items-center">
+            <p class="text-sm text-gray-700">{{ item.caption }}</p>
+            <a href="{{ item.file.url }}" download class="text-indigo-600 hover:underline text-sm">⬇</a>
+          </div> -->
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center text-gray-500 text-lg mt-10">No media uploaded to this gallery yet.</p>
+  {% endif %}
+</div>
+
+<!-- Fullscreen Image Viewer -->
+<div id="viewer" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 hidden" onclick="closeViewer()">
+  <img id="viewerImage" src="" class="max-h-[90%] max-w-[90%] rounded-xl shadow-lg" />
+</div>
+
+<script>
+  function openViewer(src) {
+    const viewer = document.getElementById('viewer');
+    const viewerImage = document.getElementById('viewerImage');
+    viewerImage.src = src;
+    viewer.classList.remove('hidden');
+  }
+
+  function closeViewer() {
+    const viewer = document.getElementById('viewer');
+    viewer.classList.add('hidden');
+  }
+</script>
+
+{% endblock %}

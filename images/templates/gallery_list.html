@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="max-w-7xl mx-auto px-4 py-10">
+  <h1 class="text-4xl font-bold text-center text-indigo-700 mb-10">📌 Image Galleries</h1>
+
+  {% if galleries %}
+    <!-- Pinterest-style columns -->
+    <div class="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-5 space-y-5">
+      {% for gallery in galleries %}
+        <a href="{% url 'gallery_detail' gallery.pk %}" class="block break-inside-avoid bg-white rounded-2xl shadow hover:shadow-lg transition">
+          
+          {% if gallery.cover_image %}
+            <!-- Show manually set cover image -->
+            <img src="{{ gallery.cover_image.url }}" alt="{{ gallery.title }}" class="w-full object-cover rounded-t-2xl" />
+
+          {% else %}
+            {% with gallery.media.first as first_media %}
+              {% if first_media %}
+                {% if first_media.is_image %}
+                  <img src="{{ first_media.file.url }}" alt="{{ gallery.title }}" class="w-full object-cover rounded-t-2xl" />
+                {% elif first_media.is_video %}
+                  <video muted class="w-full h-48 object-cover rounded-t-2xl">
+                    <source src="{{ first_media.file.url }}" type="video/mp4" />
+                  </video>
+                {% endif %}
+              {% else %}
+                <div class="w-full h-48 bg-gray-200 flex items-center justify-center text-gray-500">
+                  No Media
+                </div>
+              {% endif %}
+            {% endwith %}
+          {% endif %}
+
+          <div class="p-4">
+            <h2 class="text-lg font-semibold text-gray-800">{{ gallery.title }}</h2>
+            <p class="text-sm text-gray-600 mt-1">{{ gallery.description|truncatewords:20 }}</p>
+          </div>
+        </a>
+      {% endfor %}
+    </div>
+  {% else %}
+    <p class="text-center text-gray-500 mt-10 text-lg">No galleries available yet.</p>
+  {% endif %}
+</div>
+
+{% endblock %}
